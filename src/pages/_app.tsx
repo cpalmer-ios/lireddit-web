@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeProvider, CSSReset } from '@chakra-ui/react';
 import { Provider, createClient } from 'urql';
 import theme from '../theme';
 
@@ -10,10 +10,11 @@ const client =  createClient({
   },
 });
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: any) {
   return (
     <Provider value={client}>
     <ChakraProvider resetCSS theme={theme}>
+      <CSSReset/>
       <ColorModeProvider
         options={{
           useSystemColorMode: true,
