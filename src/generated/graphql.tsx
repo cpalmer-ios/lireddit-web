@@ -25,6 +25,12 @@ export type Query = {
 };
 
 
+export type QueryPostsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Float'];
+};
+
+
 export type QueryPostArgs = {
   id: Scalars['Float'];
 };
@@ -38,6 +44,7 @@ export type Post = {
   creatorId: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  textSnippet: Scalars['String'];
 };
 
 
@@ -228,14 +235,17 @@ export type MeQuery = (
   )> }
 );
 
-export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
+export type PostsQueryVariables = Exact<{
+  limit: Scalars['Float'];
+  cursor: Scalars['String'];
+}>;
 
 
 export type PostsQuery = (
   { __typename?: 'Query' }
   & { posts: Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'title' | 'createdAt' | 'updatedAt'>
+    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'textSnippet'>
   )> }
 );
 
@@ -342,12 +352,13 @@ export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'q
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };
 export const PostsDocument = gql`
-    query Posts {
-  posts {
+    query Posts($limit: Float!, $cursor: String!) {
+  posts(cursor: $cursor, limit: $limit) {
     id
-    title
     createdAt
     updatedAt
+    title
+    textSnippet
   }
 }
     `;
